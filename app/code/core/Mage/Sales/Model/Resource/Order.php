@@ -93,7 +93,7 @@ class Mage_Sales_Model_Resource_Order extends Mage_Sales_Model_Resource_Order_Ab
         $concatAddress = $adapter->getConcatSql(array(
             $ifnullFirst,
             $adapter->quote(' '),
-            $ifnullMiddle,
+            new Zend_Db_Expr('IF({{table}}.middlename IS NULL OR {{table}}.middlename="", "", " ")'),
             $adapter->quote(' '),
             $ifnullLast
         ));
