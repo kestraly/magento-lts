@@ -89,12 +89,13 @@ class Mage_Sales_Model_Resource_Order extends Mage_Sales_Model_Resource_Order_Ab
         $adapter       = $this->getReadConnection();
         $ifnullFirst   = $adapter->getIfNullSql('{{table}}.firstname', $adapter->quote(''));
         $ifnullMiddle  = $adapter->getIfNullSql('{{table}}.middlename', $adapter->quote(''));
+        $middleEndSpace= $adapter->getCheckSql('{{table}}.middlename IS NULL OR {{table}}.middlename="" OR {{table}}.middlename=" "', '""', '" "');
         $ifnullLast    = $adapter->getIfNullSql('{{table}}.lastname', $adapter->quote(''));
         $concatAddress = $adapter->getConcatSql(array(
             $ifnullFirst,
             $adapter->quote(' '),
-            new Zend_Db_Expr('IF({{table}}.middlename IS NULL OR {{table}}.middlename="", "", " ")'),
-            $adapter->quote(' '),
+            $ifnullMiddle,
+            $middleEndSpace,
             $ifnullLast
         ));
         $this->addVirtualGridColumn(
